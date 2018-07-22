@@ -20,17 +20,14 @@ class ImageController extends Controller
     {
         $images = ImageModel::all();
         $pages = ImageModel::paginate(6);
-//        $img = $this->image->oneImage();
-//        dd($images);
-//        return view('gallery.gallery',['images' => $images, 'pages' => $pages]);
+
         return view('gallery.paginator',['pages' => $pages]);
     }
 
     public function show($id)
     {
         $images = ImageModel::where('id',$id)->first();
-//        $img = $this->image->oneImage();
-//        dd($images);
+
         return view('gallery.show',['images' => $images]);
     }
 
@@ -42,7 +39,7 @@ class ImageController extends Controller
 
     public function update(Request $request)
     {
-//        dd($request->all());
+
         $old_path = ImageModel::where('id',$request->id_image)->first();
         Storage::delete($old_path->imagePath);
         $images = $request->file('image');
@@ -60,8 +57,7 @@ class ImageController extends Controller
 
     public function create(Request $request)
     {
-//        dd($request->all());
-//        dd(get_class_methods($request));
+
         $images = $request->file('image');
         $path = $images->store('uploads');
 
@@ -76,7 +72,6 @@ class ImageController extends Controller
     {
         $images = ImageModel::where('id',$id)->first();
         ImageModel::destroy($id);
-//        dd($images);
         Storage::delete($images->imagePath);
 
         return redirect('/gallery');
