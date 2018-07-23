@@ -18,36 +18,29 @@ class ImageController extends Controller
 
     public function index()
     {
-        $images = ImageModel::all();
-        $pages = ImageModel::paginate(6);
-
+        $pages = $this->image->index();
         return view('gallery.paginator',['pages' => $pages]);
     }
 
     public function show($id)
     {
-        $images = ImageModel::where('id',$id)->first();
-
+        $images = $this->image->show($id);
         return view('gallery.show',['images' => $images]);
     }
 
     public function edit($id)
     {
-        $images = ImageModel::where('id',$id)->first();
+        $images = $this->image->edit($id);
         return view('gallery.edit',['images' => $images]);
     }
 
     public function update(Request $request)
     {
-
-        $old_path = ImageModel::where('id',$request->id_image)->first();
-        Storage::delete($old_path->imagePath);
+        $old_path = $this->image->getPathImage($request->id_image);
+        $this->image->delImageFile($old_path);
         $images = $request->file('image');
-        $path = $images->store('uploads');
-        $old_path->imagePath = $path;
-        $old_path->save();
+        $this->image->addImageFile($request->id_image,$images);
         return redirect('/gallery');
-
     }
 
     public function add()
@@ -60,21 +53,19 @@ class ImageController extends Controller
 
         $images = $request->file('image');
         $path = $images->store('uploads');
-
-        ImageModel::insert(array(
-            'imagePath' => $path
-        ));
-
+        $this->image->create($path);
         return redirect('/gallery');
     }
 
     public function delete($id)
     {
-        $images = ImageModel::where('id',$id)->first();
-        ImageModel::destroy($id);
-        Storage::delete($images->imagePath);
-
+        $this->image->del($id);
         return redirect('/gallery');
+    }
+
+    public function test()
+    {
+        $this->image->store();
     }
 
 }
