@@ -4,7 +4,7 @@
     <p></p>
 
     <div class="text-center">
-        <img width="640" height="426" src="/{{$images->imagePath}}" class="rounded" alt="...">
+        <a href="{{ URL::previous() }}"><img width="640" height="426" src="/{{$images->imagePath}}" class="rounded" alt="..."></a>
         {{--<img width="640" height="426" src="{{$images->imagePath}}" class="rounded" alt="...">--}}
     </div>
 
