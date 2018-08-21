@@ -12,5 +12,11 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UsersTableSeeder::class);
+        DB::table('category_models')->insert([
+            'category' => 'cat',
+        ]);
+        DB::table('category_models')->insert([
+            'category' => 'dog',
+        ]);
     }
 }

@@ -11,10 +11,7 @@ class ImageModel extends Model
     protected $table = 'image_models';
     protected $image;
 
-//public function __construct()
-//{
-//    $this->image = new ImageModel();
-//}
+
 public function store()
 {
     $image = new ImageModel();
@@ -24,7 +21,7 @@ public function store()
 public function index()
 {
     $image = new ImageModel();
-    $pages = $image::paginate(6);
+    $pages = $image::paginate(4);
     return $pages;
 
 }
@@ -52,11 +49,12 @@ public function del($id)
     Storage::delete($images->imagePath);
 }
 
-public function create($path)
+public function create($path,$category)
 {
     $image = new ImageModel();
     $image::insert(array(
-        'imagePath' => $path
+        'imagePath' => $path,
+        'category_model_id' => $category
     ));
 }
 
@@ -72,13 +70,50 @@ public function delImageFile($path)
     Storage::delete($path);
 }
 
-public function addImageFile($id,$path)
+public function addImageFile($id,$path,$category)
 {
     $image = new ImageModel();
     $images = $image->edit($id);
-    $paths = $path -> store('uploads');
-    $images->imagePath = $paths;
+    $old_path = $images->imagePath;
+//    dd($old_path);
+    if ($path==null)
+    {
+        $images->imagePath = $old_path;
+    }
+    else
+    {
+        $old_path = $image->getPathImage($id);//
+        $image->delImageFile($old_path);//
+        $paths = $path -> store('uploads');
+        $images->imagePath = $paths;
+    }
+
+    $images->category_model_id = $category;
+//    dd($images);
     $images->save();
+}
+
+public function showCategory()
+{
+    return CategoryModel::all();
+
+}
+
+public function calcItemModel($id)
+{
+    return $imag = ImageModel::where('category_model_id',$category)->count();
+}
+
+public function showOneCategoru($category)
+{
+
+    return $imag = ImageModel::where('category_model_id',$category);
+
+}
+
+public function category()
+{
+    return $this->belongsTo('App\Models\CategoryModel','category_model_id','id');
 }
 
 }

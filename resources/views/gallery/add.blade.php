@@ -10,6 +10,9 @@
         <div class="row">
             <div class="col-md-3"></div>
                 <div class="col-md-6">
+                    @foreach($errors->all() as $error)
+                        {{$error}}
+                    @endforeach
 
                     {!! Form::open(array(
                     'action' => 'ImageController@create',
@@ -19,6 +22,7 @@
 
                     {{Form::file('image')}}
 
+                        {{ Form::select('category', $category)}}
                     {{Form::submit('Загрузить', array(
                     'class' => 'btn btn-success'
                     ))}}

@@ -16,6 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('/gallery', 'ImageController@index')->name('gallery');
+Route::get('/gallery/{id}', 'ImageController@showIndexCategory');
 Route::get('/show/{id}', 'ImageController@show');
 Route::get('/edit/{id}', 'ImageController@edit');
 Route::post('/update', 'ImageController@update');
@@ -23,6 +24,7 @@ Route::get('/add', 'ImageController@add');
 Route::post('/add', 'ImageController@create');
 Route::get('/del/{id}', 'ImageController@delete');
 Route::get('/test', 'ImageController@test');
+Route::get('/c', 'ImageController@c');
 
 
 Route::get('/signup', array('as'=>'reg', function () {

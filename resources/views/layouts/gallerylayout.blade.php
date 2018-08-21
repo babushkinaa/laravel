@@ -54,6 +54,7 @@
     </div>
 </header>
 
+@yield('menu')
 @yield('content')
 
 <footer class="text-muted">

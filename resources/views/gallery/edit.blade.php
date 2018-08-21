@@ -9,6 +9,10 @@
             <div><img width="348px" height="238px" src="/{{$images->imagePath}}" class="rounded" alt="..."></div>
             <div class="col-md-6">
 
+                @foreach($errors->all() as $error)
+                    {{$error}}
+                @endforeach
+
                 {!! Form::open(array(
                 'action' => 'ImageController@update',
 {{--                'class' => "form-control my-2",--}}
@@ -17,6 +21,7 @@
                 )) !!}
 
                 {{Form::file('image')}}
+                    {{ Form::select('category', $category)}}
                 {{Form::hidden('id_image', $images->id)}}
 
                 {{Form::submit('Обновить', array(
