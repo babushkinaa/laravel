@@ -1,0 +1,442 @@
+ROUTE
+
+//Файл роутинга находиться в директроии /routes/web.php фаил отвечает за все роутеры которые мы используем в приложении.
+
+Роутинг GET,POST,PUT,DELETE
+
+	Route::get('uri','controller@metod');
+
+	Route::post('uri','controller@metod');
+
+	Route::put('uri','controller@metod');
+
+	Route::delete('uri','controller@metod');
+
+		//Route::get, Route::post, Route::Put, Route::delet - отвечает за вызываемый метод вызова.
+		//URI - вызываемый uri, с которым работает роутер
+		//controller - роутинг принимает контроллер в котором необходимо искать нужный метод
+		//@metod - роутинг вызывает указанный метод в контроллере.
+
+Наименование роутеров
+
+	Route::get('uri','controller@metod')->name('namerouter');
+	Route::get('uri',array('as'=>'namerouter','controller@metod'));
+
+		//namerouter - таким образом мы можем задать название роутера, и в приложении использовать для перехода на нужный роутер route('namerouter').
+
+Группировка роутеров
+
+	route::group(['namespace'=>'admin'],function() {
+		
+		route::get('uri','controller@metod')
+
+	});
+
+		//Позволяет групировать роутеры по пространству имен, обрабатывая такой маршрут роутер будет искать контроллер и методы в указанном пространстве имен.
+
+	route::namespace('admin')->group(function(){
+
+	});
+		//Другой вариант вызова маршрутов из заданного пространства имен.
+
+	route::prefix('admin')->group(function(){
+
+	});
+		//вместо пространства имен можно задать префикс для указания роутеру места где искать данный маршрут.
+
+Передача параметров в роутер
+
+	Route::get('uri/{id}','controller@metod'); 
+	Route::get('uri/{id?}','controller@metod');
+
+		//Роутер будет обязательно ждать параметр при написании {id}, а если указано {id?} - этого параметра может и не быть. 
+
+Проверка вызываемого роутера на заданные условия
+
+	route::midleware('web')->group(function(){
+
+		route::get('/',indexController@index);
+
+	});
+		//Позволяет задать правила для маршрутов, если роутер соответствует заданным правилам маршрутизатор отработает запрошенный маршрут, если нет выполнит указанные действия в midleware.
+
+CONTROLLERS
+
+Контроллеры расположены /app/http/controllers
+
+При внедрении зависимостей в контроллер мы подключаем модель, и при обращении к контроллеру происходит создание модели для использования в контроллере.
+
+	class myController extends controller{
+		
+	protected $mymodel
+
+	public functions ___construct(Model $model){
+		
+		$this->model = $mymodel
+	}
+
+	$this->mymodel->metodMymodel;
+
+	}
+
+		//так внедряются зависимости.
+
+	public function store($id,$post,....){
+
+
+	}
+
+		//таким образом передаются параметры в методы контроллера.
+
+
+HELPERS
+
+	route ('namerote');
+
+		//позволяет в коде перенаправлять на нужный роутер
+
+	view('mainview');
+		
+		//рендерет нужный вид, и отправляет данные в виде масива полученные из контроллера.
+
+	redirect('/');
+
+		//перенаправляет на нужный URI
+
+	back();
+		
+		//перенаправляет на предыдущий маршрут.
+
+	with('$myperemenaya');
+
+		//отправляет в вид данные.
+
+	old('$variable');
+
+		//используется для сохранения введенных данных в формах.
+
+	crsf_fild(), crcf_token() 
+
+		//используется для защиты приложения при вводимых данных.
+
+	collect();
+
+		//создает коллекцию из полученных данных.
+
+	config('app.env');
+
+		//позволяет получать неоюходимые данные из файла конфигурации.
+
+	public_path('share_folders');
+
+		//указывает место сохранения получаемых файлов, в папке public проекта. Задается в папке /config/filesystems.php 
+
+		 'local' => [
+	            'driver' => 'local',
+	            'root' => storage_path('app'),
+	        ],
+
+		        local - название переменной для использования в проекте.
+		        'driver' => 'local' указывает что хранилище распологается локально.
+		        'root' => storage_path('app') корневая директория для хранения, не доступная в папке public
+
+	       'web' => [
+	            'driver' => 'local',
+	            'root' => public_path(),
+	        ],
+
+	        	'root' => public_path() - задает место хранения при обращении в папке public
+
+VIEW
+	blade
+	
+	{{ }} 
+	
+	//аналог echo в обычном php
+
+	@extends('layout')
+
+	//подключение шаблона
+
+	@section('name_section')
+
+	@endsection
+
+	//разбиение шаблона на маленькие кусочки
+
+	@yield('name_section')
+
+	//вывод в шиблоне необходимых секций 
+
+	@php
+
+		код php
+	
+	@endphp
+
+	//используется для вывода в шаблоне обычного php кода.
+
+	@if(условие)
+
+		вывод если условие выполненно
+
+	@endif
+
+	//замена оператора if
+
+	@foreach($variables as $variable)
+
+		{{$variable}}
+
+	@endforeach
+
+	//аналог foreach в обычном php
+
+	@forelse ($variables as $variable)
+
+		{{$variable}}
+
+	@empty 
+
+		{{No variable}}
+
+	@endforelse
+
+	//аналог foreache, но с возможностью ветвления если отсутствуют переменные
+
+	@include('include_file')
+
+	//подключение внешнего файла.
+
+	$errors->first('variables_validate','text_errors');
+
+	//выводит ошибку если не заполненно обязательное значение в форме.
+
+	$errors -> all()
+
+	//получаем массив ошибок. 
+
+
+	URL::previous()
+
+	//в шаблоне blade возвращает на предыдущую страницу.
+
+	links()
+	links('vendor.pagination.default',['elements' => $variable])
+
+
+	//построения пагинации в шаблоне
+
+	old()
+
+	//запоминает введеное значение в форме <input name="test" value={{old()}}>
+
+	{!! Form::open(array(
+                'action' => 'ImageController@update',
+                'class' => "form-control col-md-10",
+                'files' => true
+                )) !!}
+    // построение формы массивом передаем параметры для свойств формы
+    // 'action' - аналог html <form action="">
+    // 'class' - аналог html <form class="">
+    // 'files' - аналог html <form enctype="multipart/form-data">
+
+                {{Form::file('image')}}
+
+    // создает поле для загрузки файла в форме,
+
+                {{Form::hidden('id_image', $images->id)}}
+
+    // создает скрытое поле в форме
+
+                {{Form::submit('Обновить', array(
+                'class' => 'btn btn-success'
+                ))}}
+
+    // создает кнопку в массиве передаем параметры кнопки так же как при создании формы
+
+                {!! Form::close() !!}
+
+    // закрытие формы
+
+
+REQUEST
+
+	$request->all() 
+
+	//возвращает все параметры из глобальных массивов
+
+	$request->only(['id'])
+
+	//возвращает запрошенный параметр из глобального массива
+
+	$request->id
+
+	//аналог only но только в ООП 
+
+	$request->get('id','33')
+
+	//позволяет получить необходимый параметр и указать значение по усолчанию если запрошенный параметр отсутствует.
+
+	$request ->file('name_file')
+
+	//получаем временое имя файла, временную директроию файла.
+
+	$request->has('variable')
+
+	// проверяем есть ли необходимый параметр.
+
+	
+VALIDATION
+
+	validate($request,[
+		'image' = 'requried',
+		// обязательное для заполнения
+		'variable' = 'image',
+		// загружаемый файл должен быть картинкой
+		'variable' = 'email',
+		// поле должно быть email
+		'variable' = 'confirmed',
+		'variable' = 'exist:table',
+		//проверка существует ли в таблице 
+		'variable' = 'unique:user',
+		'variable' = 'email_addres',
+		'variable' = 'accepted',
+		// принят ли чек бокс
+		'variable' = 'nullable | image',
+		// необязательное значение ( в данном примере если есть переменная то ее проверим - картинка ли это)
+
+	])
+
+	//проверка существует ли указанный параметр в глобальном массиве, если нет возвращает обратно.
+
+	// вывод ощибок - в разделе view
+
+
+MIDDLEWARE
+
+	middleware - проверка условий, для маршрутов
+
+	middleware - создается командой php artisan make:middleware name_middleware
+
+	middleware - свои middleware подключаются в файле app\http\kernel.php
+
+	middleware - можно использовать и в файле роутинга, а так же и в самом контроллере в конструкторе.
+
+
+HTTP Errors
+
+	Для того что бы создать свои страницы для отображения 404, 501, 301, страниц нужно в 
+
+	\resorces\views 
+
+	создать папку errors ('это зарезервированная директория для ошибок в laravel')
+
+	Далее нужно создать виды необходимых ошибок 404.blade.php и в нужных местах проекта можно вызвать этот вид методом 
+
+	abort('404');
+
+COLLECTION
+
+	collect - создание коллекции.
+	
+	map - аналог foreach
+	filter - фильтрация коллекции.
+	reject - изменение фильтра на противоположное значение.
+
+	$names =$users->map(function($user){
+	return $user;
+	});
+
+	// выведет все элементы коллекции
+
+	$names =$users->filter(function($user){
+	return $user['status'] == 'ban';
+	})->filter(function($user){
+	return $user['id']>1;
+	});
+
+	filter - можно использовать, много раз.
+
+MIGRATIONS
+
+	php artisan make:migration name_migration 
+
+	php artisan migrate - выполняет миграции
+
+	migrate:refresh - откатить все миграции и запустить их заново
+	migrate:roolback - откатить последнюю миграцию
+
+	$table -> increments('id')->nullable();// создать в таблице поле id автоинкремент.
+
+	$table -> string('title')->index(); // создать в таблице поле varchar -> наложить индексы.
+
+	$table -> string('title')->nullable();// создать в таблице поле varchar -> значение по умолчанию NULL.
+
+	$table -> string('title',30)->unique();// создать в таблице поле varchar (30) -> значение уникальное.
+
+	$table->text('description'); создать поле 'description' тип - TEXT
+
+	$table->text('description')->default('default_deskriptions'); создать поле 'description' тип - TEXT 
+
+	Schema::rename($from, $to); переименовать таблицу.
+
+	$table->renameColumn('from', 'to'); переименовать колонку.
+
+FAKER
+
+	Распологаются \database\factories\
+
+
+		Необходимо создать в директории файл с названием модели ImageModelFactory.php
+
+		$factory->define(App\ImageModel::class, function(Facker @faker){
+		return[
+
+			'name' => $facker->text('10'),
+			'user' => factoru(App\User::class)->create()->id //создаст используя модель User пользователей, и присвоит значению user в ImageModel id созданного пользователя.
+
+		];
+		});
+
+
+	вызвать заполнение данных нужно методом 
+
+	factoru->define(\app\name_model::class)->create();
+
+ELOQUENT
+
+	model::all();
+		//получение из базы из таблицы модели все записи
+	
+	model::first();
+		//получение из базы из таблицы модели первой записи
+	
+	model::find($id);
+		//получение из базы из таблицы модели с заданным ID
+	
+	model::where('id',$id)->first(); // виесто id может быть любой атрибут модели.
+	model::where('id',$id)->get();
+		//получение из базы из таблицы модели запись соответствующей условиям.
+
+	model::paginate(5);
+			//(php artisan vendor:publish выбрав paginate можно менть стили для отображения (artisan перенесет стили пагинатора в \resorces\vendor\name_komponent))
+			model::simplePaginate(5) // отображает только кнопки вперед назад	
+	
+	model::insert(array[
+		'atribute' => 'variable'
+	]);
+		//запись в таблицу модели массива 
+
+	model::create([
+		'atribute' => 'variable'
+	]);
+		// требуется разрешить заполнение 'atribute' в моделе
+		// в моделе нужно указать public $fillable['atribute','atribute1']
+		// public $guarded =[]; если указать guardes то в массиве, нужно указать те атрибуты которые нельзя менять.
+		// если название таблицы отличается от названия модели то нужно указать директиву public $table = 'name_table';
+
+
+
+	//вывод данных в разделе view
+

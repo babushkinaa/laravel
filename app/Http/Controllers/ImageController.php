@@ -110,7 +110,7 @@ class ImageController extends Controller
 
     public function test()
     {
-        $this->image->store();
+
     }
 
 }
