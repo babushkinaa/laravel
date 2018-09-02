@@ -9,7 +9,7 @@
 
             <div class="row">
                 <div class="col-md-2"></div>
-                <div class="col-md-1">
+                <div class="col-md-2">
                     <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                         @foreach($categorys as $category)
                         <a class="nav-link" id="v-pills-home-tab" data-toggle="pill" onClick='location.href="/gallery/{{$category->id}}"' role="tab" aria-controls="v-pills-home" aria-selected="true">{{$category->category}}</a>
